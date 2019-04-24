@@ -2,7 +2,7 @@ syntax = "proto3";
 option java_multiple_files = true;
 package kg.erlanju;
 
-message DepositRequest {
+message WithdrawRequest {
     int32 userId = 1;
     double amount = 2;
     enum Currency {
@@ -13,8 +13,8 @@ message DepositRequest {
     Currency currency = 3;
 }
 
-message HelloResponse {}
+message WithdrawResponse {}
 
-service DepositService {
-    rpc deposit (DepositRequest) returns (HelloResponse);
+service WithdrawService {
+    rpc withdraw (WithdrawRequest) returns (WithdrawResponse);
 }

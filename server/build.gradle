@@ -57,7 +57,7 @@ protobuf {
     generatedFilesBaseDir = "$projectDir/src/"
 }
 
-task cleanProtoGen{
+clean{
     doFirst{
         delete("$projectDir/src/main/protoGen")
     }

@@ -1,0 +1,24 @@
+syntax = "proto3";
+option java_multiple_files = true;
+package kg.erlanju;
+
+message BalanceRequest {
+    int32 userId = 1;
+}
+
+message BalanceResponse {
+    enum Currency {
+        EUR = 0;
+        USD = 1;
+        GBP = 2;
+    }
+    message Account {
+        Currency currency = 1;
+        double amount = 2;
+    }
+    repeated Account accounts = 1;
+}
+
+service BalanceService {
+    rpc checkBalance (BalanceRequest) returns (BalanceResponse);
+}

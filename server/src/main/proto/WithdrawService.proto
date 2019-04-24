@@ -1,0 +1,20 @@
+syntax = "proto3";
+option java_multiple_files = true;
+package kg.erlanju;
+
+message WithdrawRequest {
+    int32 userId = 1;
+    double amount = 2;
+    enum Currency {
+       EUR = 0;
+       USD = 1;
+       GBP = 2;
+    }
+    Currency currency = 3;
+}
+
+message WithdrawResponse {}
+
+service WithdrawService {
+    rpc withdraw (WithdrawRequest) returns (WithdrawResponse);
+}

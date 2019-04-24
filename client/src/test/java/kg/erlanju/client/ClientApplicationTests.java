@@ -1,6 +1,8 @@
 package kg.erlanju.client;
 
-import kg.erlanju.client.service.HelloServiceClient;
+import kg.erlanju.client.dto.DepositRequestDto;
+import kg.erlanju.client.enums.Currency;
+import kg.erlanju.client.service.DepositServiceClient;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -13,14 +15,16 @@ import org.springframework.test.context.junit4.SpringRunner;
 public class ClientApplicationTests {
 
 	@Autowired
-	private HelloServiceClient helloServiceClient;
+	private DepositServiceClient depositServiceClient;
 
 	@Test
-	public void testHello() {
-		Assert.assertEquals(
-                "Hello John / DOE",
-                helloServiceClient.hello("John", "DOE")
-        );
+	public void testDeposit() {
+		//arrange
+		DepositRequestDto requestDto = new DepositRequestDto(55, 100.0, Currency.USD);
+		//act
+        depositServiceClient.deposit(requestDto);
+
+		//assert
 	}
 
 }

@@ -19,7 +19,7 @@ import static io.grpc.stub.ServerCalls.asyncUnimplementedUnaryCall;
  */
 @javax.annotation.Generated(
     value = "by gRPC proto compiler (version 1.20.0)",
-    comments = "Source: HelloService.proto")
+    comments = "Source: DepositService.proto")
 public final class DepositServiceGrpc {
 
   private DepositServiceGrpc() {}
@@ -28,21 +28,21 @@ public final class DepositServiceGrpc {
 
   // Static method descriptors that strictly reflect the proto.
   private static volatile io.grpc.MethodDescriptor<kg.erlanju.DepositRequest,
-      kg.erlanju.HelloResponse> getDepositMethod;
+      kg.erlanju.DepositResponse> getDepositMethod;
 
   @io.grpc.stub.annotations.RpcMethod(
       fullMethodName = SERVICE_NAME + '/' + "deposit",
       requestType = kg.erlanju.DepositRequest.class,
-      responseType = kg.erlanju.HelloResponse.class,
+      responseType = kg.erlanju.DepositResponse.class,
       methodType = io.grpc.MethodDescriptor.MethodType.UNARY)
   public static io.grpc.MethodDescriptor<kg.erlanju.DepositRequest,
-      kg.erlanju.HelloResponse> getDepositMethod() {
-    io.grpc.MethodDescriptor<kg.erlanju.DepositRequest, kg.erlanju.HelloResponse> getDepositMethod;
+      kg.erlanju.DepositResponse> getDepositMethod() {
+    io.grpc.MethodDescriptor<kg.erlanju.DepositRequest, kg.erlanju.DepositResponse> getDepositMethod;
     if ((getDepositMethod = DepositServiceGrpc.getDepositMethod) == null) {
       synchronized (DepositServiceGrpc.class) {
         if ((getDepositMethod = DepositServiceGrpc.getDepositMethod) == null) {
           DepositServiceGrpc.getDepositMethod = getDepositMethod = 
-              io.grpc.MethodDescriptor.<kg.erlanju.DepositRequest, kg.erlanju.HelloResponse>newBuilder()
+              io.grpc.MethodDescriptor.<kg.erlanju.DepositRequest, kg.erlanju.DepositResponse>newBuilder()
               .setType(io.grpc.MethodDescriptor.MethodType.UNARY)
               .setFullMethodName(generateFullMethodName(
                   "kg.erlanju.DepositService", "deposit"))
@@ -50,7 +50,7 @@ public final class DepositServiceGrpc {
               .setRequestMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
                   kg.erlanju.DepositRequest.getDefaultInstance()))
               .setResponseMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
-                  kg.erlanju.HelloResponse.getDefaultInstance()))
+                  kg.erlanju.DepositResponse.getDefaultInstance()))
                   .setSchemaDescriptor(new DepositServiceMethodDescriptorSupplier("deposit"))
                   .build();
           }
@@ -89,7 +89,7 @@ public final class DepositServiceGrpc {
     /**
      */
     public void deposit(kg.erlanju.DepositRequest request,
-        io.grpc.stub.StreamObserver<kg.erlanju.HelloResponse> responseObserver) {
+        io.grpc.stub.StreamObserver<kg.erlanju.DepositResponse> responseObserver) {
       asyncUnimplementedUnaryCall(getDepositMethod(), responseObserver);
     }
 
@@ -100,7 +100,7 @@ public final class DepositServiceGrpc {
             asyncUnaryCall(
               new MethodHandlers<
                 kg.erlanju.DepositRequest,
-                kg.erlanju.HelloResponse>(
+                kg.erlanju.DepositResponse>(
                   this, METHODID_DEPOSIT)))
           .build();
     }
@@ -127,7 +127,7 @@ public final class DepositServiceGrpc {
     /**
      */
     public void deposit(kg.erlanju.DepositRequest request,
-        io.grpc.stub.StreamObserver<kg.erlanju.HelloResponse> responseObserver) {
+        io.grpc.stub.StreamObserver<kg.erlanju.DepositResponse> responseObserver) {
       asyncUnaryCall(
           getChannel().newCall(getDepositMethod(), getCallOptions()), request, responseObserver);
     }
@@ -153,7 +153,7 @@ public final class DepositServiceGrpc {
 
     /**
      */
-    public kg.erlanju.HelloResponse deposit(kg.erlanju.DepositRequest request) {
+    public kg.erlanju.DepositResponse deposit(kg.erlanju.DepositRequest request) {
       return blockingUnaryCall(
           getChannel(), getDepositMethod(), getCallOptions(), request);
     }
@@ -179,7 +179,7 @@ public final class DepositServiceGrpc {
 
     /**
      */
-    public com.google.common.util.concurrent.ListenableFuture<kg.erlanju.HelloResponse> deposit(
+    public com.google.common.util.concurrent.ListenableFuture<kg.erlanju.DepositResponse> deposit(
         kg.erlanju.DepositRequest request) {
       return futureUnaryCall(
           getChannel().newCall(getDepositMethod(), getCallOptions()), request);
@@ -207,7 +207,7 @@ public final class DepositServiceGrpc {
       switch (methodId) {
         case METHODID_DEPOSIT:
           serviceImpl.deposit((kg.erlanju.DepositRequest) request,
-              (io.grpc.stub.StreamObserver<kg.erlanju.HelloResponse>) responseObserver);
+              (io.grpc.stub.StreamObserver<kg.erlanju.DepositResponse>) responseObserver);
           break;
         default:
           throw new AssertionError();
@@ -231,7 +231,7 @@ public final class DepositServiceGrpc {
 
     @java.lang.Override
     public com.google.protobuf.Descriptors.FileDescriptor getFileDescriptor() {
-      return kg.erlanju.HelloService.getDescriptor();
+      return kg.erlanju.DepositServiceOuterClass.getDescriptor();
     }
 
     @java.lang.Override

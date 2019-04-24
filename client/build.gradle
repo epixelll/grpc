@@ -57,7 +57,7 @@ protobuf {
     generatedFilesBaseDir = "$projectDir/src/"
 }
 
-task cleanProtoGen{
+clean{
     doFirst{
         delete("$projectDir/src/main/protoGen")
     }
@@ -82,4 +82,5 @@ dependencies {
 
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testCompile 'org.junit.jupiter:junit-jupiter-engine:5.2.0'
+    testCompile 'org.mockito:mockito-core:2.1.0'
 }
