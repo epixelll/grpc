@@ -1,8 +1,13 @@
 package kg.erlanju.client;
 
+import kg.erlanju.client.dto.BalanceRequestDto;
+import kg.erlanju.client.dto.BalanceResponseDto;
 import kg.erlanju.client.dto.DepositRequestDto;
+import kg.erlanju.client.dto.WithdrawRequestDto;
 import kg.erlanju.client.enums.Currency;
+import kg.erlanju.client.service.BalanceServiceClient;
 import kg.erlanju.client.service.DepositServiceClient;
+import kg.erlanju.client.service.WithdrawServiceClient;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -17,14 +22,41 @@ public class ClientApplicationTests {
 	@Autowired
 	private DepositServiceClient depositServiceClient;
 
+	@Autowired
+	private WithdrawServiceClient withdrawServiceClient;
+
+	@Autowired
+	private BalanceServiceClient balanceServiceClient;
+
 	@Test
 	public void testDeposit() {
 		//arrange
-		DepositRequestDto requestDto = new DepositRequestDto(55, 100.0, Currency.USD);
+		DepositRequestDto requestDto = new DepositRequestDto(1, 100.0, Currency.USD);
 		//act
         depositServiceClient.deposit(requestDto);
 
 		//assert
 	}
+
+	@Test
+	public void testWithdraw() {
+		//arrange
+		WithdrawRequestDto requestDto = new WithdrawRequestDto(1, 100.0, Currency.USD);
+		//act
+		withdrawServiceClient.withdraw(requestDto);
+
+		//assert
+	}
+
+	@Test
+	public void testBalance() {
+		//arrange
+		BalanceRequestDto requestDto = new BalanceRequestDto(1);
+		//act
+		BalanceResponseDto balanceResponseDto = balanceServiceClient.checkBalance(requestDto);
+
+		//assert
+	}
+
 
 }

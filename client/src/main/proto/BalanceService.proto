@@ -12,11 +12,12 @@ message BalanceResponse {
         USD = 1;
         GBP = 2;
     }
-    message Account {
+    int32 userId = 1;
+    message Wallet {
         Currency currency = 1;
         double amount = 2;
     }
-    repeated Account accounts = 1;
+    repeated Wallet wallet = 2;
 }
 
 service BalanceService {

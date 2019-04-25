@@ -84,4 +84,5 @@ dependencies {
     compile 'io.github.lognet:grpc-spring-boot-starter:3.2.2'
 
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testImplementation 'com.h2database:h2'
 }
