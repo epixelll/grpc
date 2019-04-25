@@ -1,9 +1,12 @@
 package kg.erlanju.server;
 
+import io.grpc.ManagedChannel;
+import io.grpc.ManagedChannelBuilder;
+import kg.erlanju.DepositServiceGrpc;
 import kg.erlanju.WithdrawRequest;
+import kg.erlanju.WithdrawResponse;
+import kg.erlanju.WithdrawServiceGrpc;
 import kg.erlanju.server.dto.WithdrawRequestDto;
-import kg.erlanju.server.endpoint.DepositGrpcServiceImpl;
-import kg.erlanju.server.endpoint.WithdrawGrpcServiceImpl;
 import kg.erlanju.server.entity.Account;
 import kg.erlanju.server.entity.Wallet;
 import kg.erlanju.server.enums.Currency;
@@ -23,20 +26,22 @@ import java.math.BigDecimal;
 public class ServerApplicationTests {
 
     @Autowired
-    private DepositGrpcServiceImpl depositGrpcServiceImpl;
-
-    @Autowired
-    private WithdrawGrpcServiceImpl withdrawGrpcServiceImpl;
-
-    @Autowired
     private AccountRepository accountRepository;
 
     @Autowired
     private WalletRepository walletRepository;
 
+    private DepositServiceGrpc.DepositServiceBlockingStub depositServiceBlockingStub;
+    private WithdrawServiceGrpc.WithdrawServiceBlockingStub withdrawServiceBlockingStub;
+
     @PostConstruct
-    public void init() {
+    private void init() {
         initDatabaseAccount();
+
+        ManagedChannel managedChannel = ManagedChannelBuilder.forAddress("localhost", 6565).usePlaintext().build();
+
+        depositServiceBlockingStub = DepositServiceGrpc.newBlockingStub(managedChannel);
+        withdrawServiceBlockingStub = WithdrawServiceGrpc.newBlockingStub(managedChannel);
     }
 
 
@@ -44,10 +49,9 @@ public class ServerApplicationTests {
     public void contextLoads() {
     }
 
-    @Test
+    @Test(expected = IllegalStateException.class)
     public void withdrawalOf200USD_throwsInsufficientFundsException() {
-        withdrawGrpcServiceImpl.withdraw(get200USDWithdrawRequest());
-        WithdrawRequestDto requestDto = new WithdrawRequestDto(1, Currency.USD, 100.0);
+        WithdrawResponse response = withdrawServiceBlockingStub.withdraw(get200USDWithdrawRequest());
     }
 
     private WithdrawRequest get200USDWithdrawRequest() {
