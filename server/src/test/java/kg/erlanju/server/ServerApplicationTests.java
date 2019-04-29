@@ -2,11 +2,8 @@ package kg.erlanju.server;
 
 import io.grpc.ManagedChannel;
 import io.grpc.ManagedChannelBuilder;
-import kg.erlanju.DepositServiceGrpc;
-import kg.erlanju.WithdrawRequest;
-import kg.erlanju.WithdrawResponse;
-import kg.erlanju.WithdrawServiceGrpc;
-import kg.erlanju.server.dto.WithdrawRequestDto;
+import io.grpc.StatusRuntimeException;
+import kg.erlanju.*;
 import kg.erlanju.server.entity.Account;
 import kg.erlanju.server.entity.Wallet;
 import kg.erlanju.server.enums.Currency;
@@ -21,6 +18,9 @@ import org.springframework.test.context.junit4.SpringRunner;
 import javax.annotation.PostConstruct;
 import java.math.BigDecimal;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.fail;
+
 @RunWith(SpringRunner.class)
 @SpringBootTest
 public class ServerApplicationTests {
@@ -33,6 +33,7 @@ public class ServerApplicationTests {
 
     private DepositServiceGrpc.DepositServiceBlockingStub depositServiceBlockingStub;
     private WithdrawServiceGrpc.WithdrawServiceBlockingStub withdrawServiceBlockingStub;
+    private BalanceServiceGrpc.BalanceServiceBlockingStub balanceServiceBlockingStub;
 
     @PostConstruct
     private void init() {
@@ -42,6 +43,7 @@ public class ServerApplicationTests {
 
         depositServiceBlockingStub = DepositServiceGrpc.newBlockingStub(managedChannel);
         withdrawServiceBlockingStub = WithdrawServiceGrpc.newBlockingStub(managedChannel);
+        balanceServiceBlockingStub = BalanceServiceGrpc.newBlockingStub(managedChannel);
     }
 
 
@@ -49,9 +51,92 @@ public class ServerApplicationTests {
     public void contextLoads() {
     }
 
-    @Test(expected = IllegalStateException.class)
-    public void withdrawalOf200USD_throwsInsufficientFundsException() {
-        WithdrawResponse response = withdrawServiceBlockingStub.withdraw(get200USDWithdrawRequest());
+    @Test
+    public void test() {
+        //1
+        try {
+            withdrawServiceBlockingStub.withdraw(get200USDWithdrawRequest());
+        }catch (StatusRuntimeException e) {
+            assertThat(e.getStatus().getDescription()).isEqualTo("insufficient_funds");
+        }
+
+        //2
+        depositServiceBlockingStub.deposit(getDepositRequest(DepositRequest.Currency.USD, 100d));
+
+        //3
+        BalanceResponse balanceResponse = balanceServiceBlockingStub.checkBalance(getBalanceRequest());
+        Double usdAmount = balanceResponse.getWalletList().stream().filter(w -> w.getCurrency().equals(BalanceResponse.Currency.USD)).findFirst().get().getAmount();
+        assertThat(usdAmount).isEqualTo(100d);
+
+        //4
+        try {
+            withdrawServiceBlockingStub.withdraw(get200USDWithdrawRequest());
+        }catch (StatusRuntimeException e) {
+            assertThat(e.getStatus().getDescription()).isEqualTo("insufficient_funds");
+        }
+
+        //5
+        depositServiceBlockingStub.deposit(getDepositRequest(DepositRequest.Currency.EUR, 100d));
+
+        //6
+        balanceResponse = balanceServiceBlockingStub.checkBalance(getBalanceRequest());
+        usdAmount = balanceResponse.getWalletList().stream().filter(w -> w.getCurrency().equals(BalanceResponse.Currency.USD)).findFirst().get().getAmount();
+        Double eurAmount = balanceResponse.getWalletList().stream().filter(w -> w.getCurrency().equals(BalanceResponse.Currency.EUR)).findFirst().get().getAmount();
+        assertThat(usdAmount).isEqualTo(100d);
+        assertThat(eurAmount).isEqualTo(100d);
+
+        //7
+        try {
+            withdrawServiceBlockingStub.withdraw(get200USDWithdrawRequest());
+        }catch (StatusRuntimeException e) {
+            assertThat(e.getStatus().getDescription()).isEqualTo("insufficient_funds");
+        }
+
+        //8
+        depositServiceBlockingStub.deposit(getDepositRequest(DepositRequest.Currency.USD, 100d));
+
+        //9
+        balanceResponse = balanceServiceBlockingStub.checkBalance(getBalanceRequest());
+        usdAmount = balanceResponse.getWalletList().stream().filter(w -> w.getCurrency().equals(BalanceResponse.Currency.USD)).findFirst().get().getAmount();
+        eurAmount = balanceResponse.getWalletList().stream().filter(w -> w.getCurrency().equals(BalanceResponse.Currency.EUR)).findFirst().get().getAmount();
+        assertThat(usdAmount).isEqualTo(200d);
+        assertThat(eurAmount).isEqualTo(100d);
+
+        //10
+        try {
+            withdrawServiceBlockingStub.withdraw(get200USDWithdrawRequest());
+        }catch (StatusRuntimeException e) {
+            fail("There is exception in withdraw.");
+            throw e;
+        }
+
+        //11
+        balanceResponse = balanceServiceBlockingStub.checkBalance(getBalanceRequest());
+        usdAmount = balanceResponse.getWalletList().stream().filter(w -> w.getCurrency().equals(BalanceResponse.Currency.USD)).findFirst().get().getAmount();
+        eurAmount = balanceResponse.getWalletList().stream().filter(w -> w.getCurrency().equals(BalanceResponse.Currency.EUR)).findFirst().get().getAmount();
+        assertThat(usdAmount).isEqualTo(0d);
+        assertThat(eurAmount).isEqualTo(100d);
+
+        //12
+        try {
+            withdrawServiceBlockingStub.withdraw(get200USDWithdrawRequest());
+        }catch (StatusRuntimeException e) {
+            assertThat(e.getStatus().getDescription()).isEqualTo("insufficient_funds");
+        }
+    }
+
+    private BalanceRequest getBalanceRequest() {
+        return BalanceRequest.newBuilder()
+                .setUserId(1)
+                .build();
+    }
+
+    private DepositRequest getDepositRequest(DepositRequest.Currency currency, Double amount) {
+        return DepositRequest.newBuilder()
+                .setUserId(1)
+                .setCurrency(currency)
+                .setAmount(amount)
+                .build();
     }
 
     private WithdrawRequest get200USDWithdrawRequest() {

@@ -1,10 +1,12 @@
-package kg.erlanju.client.service;
+package kg.erlanju.client.service.client.impl;
 
 import io.grpc.ManagedChannel;
 import io.grpc.ManagedChannelBuilder;
 import kg.erlanju.WithdrawRequest;
+import kg.erlanju.WithdrawResponse;
 import kg.erlanju.WithdrawServiceGrpc;
 import kg.erlanju.client.dto.WithdrawRequestDto;
+import kg.erlanju.client.service.client.WithdrawServiceClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -12,8 +14,8 @@ import org.springframework.stereotype.Component;
 import javax.annotation.PostConstruct;
 
 @Component
-public class WithdrawServiceClient {
-    private static final Logger LOGGER = LoggerFactory.getLogger(WithdrawServiceClient.class);
+public class WithdrawServiceClientImpl implements WithdrawServiceClient {
+    private static final Logger LOGGER = LoggerFactory.getLogger(WithdrawServiceClientImpl.class);
 
     private WithdrawServiceGrpc.WithdrawServiceBlockingStub withdrawServiceBlockingStub;
 
@@ -24,6 +26,7 @@ public class WithdrawServiceClient {
         withdrawServiceBlockingStub = WithdrawServiceGrpc.newBlockingStub(managedChannel);
     }
 
+    @Override
     public void withdraw(WithdrawRequestDto requestDto) {
         WithdrawRequest withdrawRequest = WithdrawRequest.newBuilder()
                 .setUserId(requestDto.getUserId())

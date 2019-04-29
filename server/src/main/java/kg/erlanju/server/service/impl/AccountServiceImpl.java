@@ -8,6 +8,7 @@ import kg.erlanju.server.service.AccountService;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityNotFoundException;
+import javax.transaction.Transactional;
 
 @Service
 public class AccountServiceImpl implements AccountService {
@@ -30,6 +31,7 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Override
+    @Transactional
     public BalanceResponseDto getBalance(Integer accountId) {
         return balanceMapper.accountToBalanceResponseDto(findById(accountId));
     }

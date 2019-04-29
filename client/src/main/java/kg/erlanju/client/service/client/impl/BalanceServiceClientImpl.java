@@ -1,4 +1,4 @@
-package kg.erlanju.client.service;
+package kg.erlanju.client.service.client.impl;
 
 import io.grpc.ManagedChannel;
 import io.grpc.ManagedChannelBuilder;
@@ -9,6 +9,7 @@ import kg.erlanju.client.dto.BalanceRequestDto;
 import kg.erlanju.client.dto.BalanceResponseDto;
 import kg.erlanju.client.dto.WalletInfoDto;
 import kg.erlanju.client.enums.Currency;
+import kg.erlanju.client.service.client.BalanceServiceClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -18,8 +19,8 @@ import java.math.BigDecimal;
 import java.util.stream.Collectors;
 
 @Component
-public class BalanceServiceClient {
-    private static final Logger LOGGER = LoggerFactory.getLogger(BalanceServiceClient.class);
+public class BalanceServiceClientImpl implements BalanceServiceClient {
+    private static final Logger LOGGER = LoggerFactory.getLogger(BalanceServiceClientImpl.class);
 
     private BalanceServiceGrpc.BalanceServiceBlockingStub balanceServiceBlockingStub;
 
@@ -30,6 +31,7 @@ public class BalanceServiceClient {
         balanceServiceBlockingStub = BalanceServiceGrpc.newBlockingStub(managedChannel);
     }
 
+    @Override
     public BalanceResponseDto checkBalance(BalanceRequestDto requestDto) {
         BalanceRequest balanceRequest = BalanceRequest.newBuilder()
                 .setUserId(requestDto.getUserId())

@@ -48,7 +48,7 @@ public class WalletServiceImpl implements WalletService {
         BigDecimal newAmount = wallet.getAmount().subtract(withdrawRequestDto.getAmount());
 
         if(newAmount.compareTo(BigDecimal.ZERO) < 0)
-            throw new IllegalStateException("There is not enough funds in wallet.");
+            throw new IllegalStateException("insufficient_funds");
 
         wallet.setAmount(newAmount);
         walletRepository.save(wallet);
@@ -58,6 +58,6 @@ public class WalletServiceImpl implements WalletService {
         Account account = accountService.findById(accountId);
 
         return account.getWallets().stream().filter(w -> w.getCurrency().equals(currency)).findAny()
-                .orElseThrow(() -> new IllegalStateException(String.format("User has no wallet with this currency: %s", currency)));
+                .orElseThrow(() -> new IllegalStateException("Unknown currency."));
     }
 }
