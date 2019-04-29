@@ -1,5 +1,7 @@
 package kg.erlanju.client.service.runner;
 
 public interface RoundsRunner {
-    public void runFirstRound();
+    void runFirstRound(Integer userId);
+    void runSecondRound(Integer userId);
+    void runThirdRound(Integer userId);
 }

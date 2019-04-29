@@ -3,19 +3,17 @@ package kg.erlanju.client.service.client.impl;
 import io.grpc.ManagedChannel;
 import io.grpc.ManagedChannelBuilder;
 import kg.erlanju.WithdrawRequest;
-import kg.erlanju.WithdrawResponse;
 import kg.erlanju.WithdrawServiceGrpc;
 import kg.erlanju.client.dto.WithdrawRequestDto;
 import kg.erlanju.client.service.client.WithdrawServiceClient;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
 
+@Slf4j
 @Component
 public class WithdrawServiceClientImpl implements WithdrawServiceClient {
-    private static final Logger LOGGER = LoggerFactory.getLogger(WithdrawServiceClientImpl.class);
 
     private WithdrawServiceGrpc.WithdrawServiceBlockingStub withdrawServiceBlockingStub;
 
@@ -34,6 +32,11 @@ public class WithdrawServiceClientImpl implements WithdrawServiceClient {
                 .setAmount(requestDto.getAmount())
                 .build();
 
-        withdrawServiceBlockingStub.withdraw(withdrawRequest);
+        try {
+            withdrawServiceBlockingStub.withdraw(withdrawRequest);
+            log.info(String.format("WITHDRAW: %.2f %s to users(id = %d) account", requestDto.getAmount(), requestDto.getCurrency(), requestDto.getUserId()));
+        } catch (Exception e){
+            log.error(String.format("WITHDRAW ERROR(%s) on user(id = %d) for %.2f %s", e.getMessage(), requestDto.getUserId(), requestDto.getAmount(), requestDto.getCurrency()));
+        }
     }
 }

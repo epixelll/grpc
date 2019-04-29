@@ -58,6 +58,6 @@ public class WalletServiceImpl implements WalletService {
         Account account = accountService.findById(accountId);
 
         return account.getWallets().stream().filter(w -> w.getCurrency().equals(currency)).findAny()
-                .orElseThrow(() -> new IllegalStateException("Unknown currency."));
+                .orElseThrow(() -> new IllegalStateException(String.format("Wallet with currency %s is not found for user with id %s", currency, accountId)));
     }
 }

@@ -27,7 +27,7 @@ public class AccountServiceImpl implements AccountService {
     @Override
     public Account findById(Integer accountId) {
         return accountRepository.findById(accountId)
-                .orElseThrow(() -> new EntityNotFoundException(String.format("Account with id: %s", accountId)));
+                .orElseThrow(() -> new EntityNotFoundException(String.format("Account with id: %s not found", accountId)));
     }
 
     @Override

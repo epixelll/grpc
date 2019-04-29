@@ -13,9 +13,15 @@ public class DepositMapperImpl implements DepositMapper {
 
     @Override
     public DepositRequestDto toDepositRequestDto(DepositRequest request) {
+        Currency currency;
+        try{
+            currency = Currency.valueOf(request.getCurrency().toString());
+        } catch (Exception e) {
+            throw new IllegalStateException("unknown_currency");
+        }
         return new DepositRequestDto(
                 request.getUserId(),
-                Currency.valueOf(request.getCurrency().toString()),
+                currency,
                 BigDecimal.valueOf(request.getAmount())
         );
     }

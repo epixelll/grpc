@@ -13,9 +13,15 @@ public class WithdrawMapperImpl implements WithdrawMapper {
 
     @Override
     public WithdrawRequestDto toWithdrawRequestDto(WithdrawRequest request) {
+        Currency currency;
+        try{
+            currency = Currency.valueOf(request.getCurrency().toString());
+        } catch (Exception e) {
+            throw new IllegalStateException("unknown_currency");
+        }
         return new WithdrawRequestDto(
                 request.getUserId(),
-                Currency.valueOf(request.getCurrency().toString()),
+                currency,
                 BigDecimal.valueOf(request.getAmount())
         );
     }
